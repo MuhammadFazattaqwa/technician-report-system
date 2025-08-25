@@ -1,0 +1,89 @@
+import type React from "react"
+import type { Metadata } from "next"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
+import { PWAInstallPrompt } from "@/components/pwa-install-prompt"
+import "./globals.css"
+
+export const metadata: Metadata = {
+  title: "Sistem Laporan Otomatis Teknisi",
+  description: "Aplikasi laporan otomatis untuk teknisi lapangan dan admin",
+  generator: "v0.dev",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Laporan Teknisi",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Sistem Laporan Otomatis Teknisi",
+    title: "Sistem Laporan Otomatis Teknisi",
+    description: "Aplikasi laporan otomatis untuk teknisi lapangan dan admin",
+  },
+  twitter: {
+    card: "summary",
+    title: "Sistem Laporan Otomatis Teknisi",
+    description: "Aplikasi laporan otomatis untuk teknisi lapangan dan admin",
+  },
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="id">
+      <head>
+        <meta name="application-name" content="Laporan Teknisi" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Laporan Teknisi" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="theme-color" content="#000000" />
+
+        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icon-192x192.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="shortcut icon" href="/icon-192x192.png" />
+
+        <style>{`
+html {
+  font-family: ${GeistSans.style.fontFamily};
+  --font-sans: ${GeistSans.variable};
+  --font-mono: ${GeistMono.variable};
+}
+        `}</style>
+      </head>
+      <body>
+        {children}
+        <PWAInstallPrompt />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                      console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                      console.log('SW registration failed: ', registrationError);
+                    });
+                });
+              }
+            `,
+          }}
+        />
+      </body>
+    </html>
+  )
+}
